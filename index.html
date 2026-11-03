@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Complete</title>
+<style>
+  :root { color-scheme: dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center;
+    background: radial-gradient(ellipse at center, #10251f 0%, #07110f 48%, #030706 100%);
+    color: #b8ffd8; font-family: Consolas, "Courier New", monospace;
+    overflow: hidden;
+  }
+  .window {
+    width: min(850px, calc(100% - 32px)); padding: 22px;
+    border: 1px solid #276b4c; border-radius: 14px;
+    background: rgba(3, 12, 9, .88);
+    box-shadow: 0 0 45px rgba(40, 255, 140, .12), inset 0 0 30px rgba(40, 255, 140, .035);
+  }
+  .bar { display:flex; align-items:center; gap:8px; padding-bottom:16px; border-bottom:1px solid #1d4935; color:#75a98b; font-size:13px; }
+  .dot { width:10px; height:10px; border-radius:50%; background:#3bd681; box-shadow:0 0 10px #3bd681; }
+  .title { margin-left:8px; letter-spacing:.08em; }
+  .terminal { min-height:270px; padding:24px 4px 12px; font-size:clamp(14px, 2.2vw, 18px); line-height:1.9; }
+  .line { min-height:1.9em; white-space:pre-wrap; }
+  .prompt { color:#45e995; }
+  .muted { color:#78a88c; }
+  .success { color:#e1ffe9; text-shadow:0 0 14px rgba(87,255,155,.35); }
+  .cursor { display:inline-block; width:9px; height:1.05em; margin-left:4px; vertical-align:-.15em; background:#8bffb6; animation: blink .85s steps(2) infinite; }
+  @keyframes blink { 50% { opacity:0; } }
+  .message { opacity:0; transform:translateY(8px); transition:opacity .9s ease, transform .9s ease; text-align:center; padding:8px 10px 14px; }
+  .message.show { opacity:1; transform:translateY(0); }
+  h1 { margin:0 0 12px; font-size:clamp(25px, 5vw, 42px); color:#caffdc; text-shadow:0 0 22px rgba(70,255,145,.28); }
+  .sub { margin:0; color:#9ccbad; font-size:clamp(14px, 2.2vw, 18px); line-height:1.7; }
+  .footer { display:flex; justify-content:space-between; gap:12px; align-items:center; border-top:1px solid #1d4935; padding-top:14px; color:#68947a; font-size:12px; }
+  button { font:inherit; color:#b8ffd8; background:#10291e; border:1px solid #347d56; border-radius:7px; padding:8px 12px; cursor:pointer; }
+  button:hover { background:#173c2a; }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
+</style>
+</head>
+<body>
+<main class="window">
+  <div class="bar"><span class="dot"></span><span class="dot" style="background:#d6b65b;box-shadow:none"></span><span class="dot" style="background:#c86d6d;box-shadow:none"></span><span class="title">[ ... ]</span></div>
+  <section class="terminal" aria-live="polite">
+    <div id="lines"></div>
+    <div id="final" class="message">
+      <h1>Thank you for your time, teacher!</h1>
+      <p class="sub">Project completed successfully.<br>Have a great day. Keep learning, keep creating.</p>
+    </div>
+  </section>
+  <div class="footer">
+    <span>STATUS: <span style="color:#62efa0">SUCCESS</span></span>
+    <button id="replay" type="button">Replay animation ↻</button>
+  </div>
+</main>
+<script>
+const scriptLines = [
+  ["$ initializing_software_engineering_project", "prompt"],
+  ["$ loading ideas, code, and creativity...", "muted"],
+  ["$ checking final presentation", "prompt"],
+  ["[ OK ] All sections compiled successfully.", "success"],
+  ["[ OK ] Sources and references prepared.", "success"],
+  ["> process finished with exit code 0", "success"]
+];
+const lines = document.getElementById("lines");
+const finalMessage = document.getElementById("final");
+let timers = [];
+function replay() {
+  timers.forEach(clearTimeout);
+  timers = [];
+  lines.innerHTML = "";
+  finalMessage.classList.remove("show");
+  scriptLines.forEach((item, index) => {
+    timers.push(setTimeout(() => {
+      const row = document.createElement("div");
+      row.className = "line " + item[1];
+      row.textContent = item[0];
+      lines.appendChild(row);
+      if (index === scriptLines.length - 1) {
+        const cursor = document.createElement("span");
+        cursor.className = "cursor";
+        row.appendChild(cursor);
+        timers.push(setTimeout(() => {
+          cursor.remove();
+          finalMessage.classList.add("show");
+        }, 700));
+      }
+    }, 650 * (index + 1)));
+  });
+}
+document.getElementById("replay").addEventListener("click", replay);
+replay();
+</script>
+</body>
+</html>
